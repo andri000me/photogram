@@ -1,2 +1,0 @@
-# photogram
-media sosial project
