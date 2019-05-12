@@ -19,8 +19,9 @@ Bahan :
 3. browser
    chrome, mozila, vivaldi, opera
    
-cara instal
-1.download atau install file ini git clone https://github.com/yudono/photogram.git
+cara instal :
+
+1. download atau install file ini git clone https://github.com/yudono/photogram.git
 2. import databse sql
 3. atur config database
 4. jalankan
