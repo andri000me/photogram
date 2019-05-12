@@ -25,3 +25,6 @@ cara instal :
 2. import databse sql
 3. atur config database
 4. jalankan
+
+
+terimakasih like share and subscribe
