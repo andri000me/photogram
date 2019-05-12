@@ -1,5 +1,6 @@
 <?php 
 date_default_timezone_set('Asia/jakarta');
+require 'page/baseController.php';
 require 'connect.php';
 
 if(isset($_POST['user'])){
@@ -19,24 +20,25 @@ if(isset($_POST['user'])){
 
 				$pass = password_hash($pass, PASSWORD_DEFAULT);
 
-				$sql = "INSERT INTO users(user, email, password,role) VALUES('$name','$email','$pass','admin')";
+				$sql = "INSERT INTO users(user, email, password,profile,bg,role) VALUES('$name','$email','$pass','','','admin')";
 				$query = $connect->query($sql);
 
 				if($query){
-					echo 'Berhasil daftar';
+					alert('Berhasil daftar');
+					redirect('index.php');
 				}else{
-					echo 'Gagal daftar';
+					alert('Gagal daftar');
 				}
 
 			}else{
-				echo 'Data sudah ada dengan email yang sama!';
+				alert('Data sudah ada dengan email yang sama!');
 			}
 
 		}else{
-			echo 'Error Password tidak sama';
+			alert('Error Password tidak sama');
 		}
 	}else{
-		echo 'Error data belum lengkap';
+		alert('Error data belum lengkap');
 	}
 }
 ?>
@@ -45,7 +47,8 @@ if(isset($_POST['user'])){
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Register</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <style>

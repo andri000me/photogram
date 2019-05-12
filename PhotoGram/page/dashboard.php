@@ -5,7 +5,9 @@ require '../connect.php';
 
 if(isset($_COOKIE["user"])||isset($_SESSION['user']))
 {
-	$user = $_SESSION['user'] | $_COOKIE["user"];
+	$user = isset($_SESSION['user']) ? $_SESSION['user'] : false;
+
+	$user = isset($_COOKIE["user"]) ? $_COOKIE["user"] : false;
 	$user=base64_decode($user);
 
 	$query = $connect->query("SELECT * FROM users WHERE id = '$user'");
@@ -23,7 +25,7 @@ if(isset($_COOKIE["user"])||isset($_SESSION['user']))
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title></title>
+	<title>Dashboard</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
@@ -73,7 +75,7 @@ if(isset($_COOKIE["user"])||isset($_SESSION['user']))
 			<?php 
 			$access = true;
 			if(isset($_GET['page'])){
-				$page = $_GET['page'];
+				$page = filter($_GET['page']);
 				switch ($page) {
 					case 'search':
 						include 'search.php';

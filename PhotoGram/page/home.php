@@ -55,8 +55,15 @@ if(isset($access)) {
 	.img{margin: -12px -24px}
 	.iframe{
 		width: 100%;
-		height: 160px;
+		height: 0;
 		border:0;
+	}
+	.status-profile{
+		width: 40px;
+		height: 40px;
+		border-radius: 100%;
+		border: 1px solid #f0f0f0;
+		margin-right: 12px;
 	}
 </style>
 <div class="row">
@@ -69,7 +76,7 @@ if(isset($access)) {
 				<h4>Create Status</h4>
 				<hr>
 				<div class="upload">
-					<input type="text" class="form-control" name="caption"/>
+					<textarea type="text" class="form-control" name="caption" style="height:38px;"></textarea>
 					<button class="upload-image"><i class="fa fa-image"></i></button>
 					<input type="file" class="file-upload" name="file">
 				</div>
@@ -79,7 +86,12 @@ if(isset($access)) {
 
 			<!-- status item -->
 			<?php 
-			$q = $connect->query("SELECT * FROM status s LEFT JOIN users u ON s.sender_id = u.id ORDER BY id ASC");
+			$status = isset($_GET['id']) ? (filter($_GET['id']) != '') ? filter($_GET['id']) : false : false;
+			if($status==false){
+				$q = $connect->query("SELECT s.s_id,u.profile,u.user,s.file,s.sender_id FROM status s LEFT JOIN users u ON s.sender_id = u.id ORDER BY s.s_id DESC");
+			}else{
+				$q = $connect->query("SELECT s.s_id,u.profile,u.user,s.file,s.sender_id FROM status s LEFT JOIN users u ON s.sender_id = u.id WHERE s.s_id = '$status' ORDER BY s.s_id DESC");
+			}
 			$i = 0;
 			while($row = $q->fetch_assoc()){
 
@@ -108,7 +120,7 @@ if(isset($access)) {
 				?>
 				<div class="status-item">
 					<div class="status-header">
-						<a href="#"><?=$row['user']?></a><small> 12menit lalu</small>
+						<a href="?page=user&id=<?=$row['sender_id']?>"><img src="<?=$row['profile']!=''?$row['profile']:'../img/logo.png'?>" class="status-profile" alt="<?=$row['user']?>"><?=$row['user']?></a><small> 12menit lalu</small>
 					</div>
 					<hr>
 					<div class="status-body">
@@ -119,11 +131,11 @@ if(isset($access)) {
 					<hr>
 					<div class="status-footer">
 						<a href="<?=$url?>" class="btn text-danger"><i class="<?=$icon?>"></i></i></a>
-						<button class="btn text-success" onclick="document.getElementById('iframe<?=$i?>').style.height='160px'"><i class="fa fa fa-comment"></i></button>
-						<a href="#" class="btn text-warning"><i class="fa fa-share-alt"></i></a>
+						<button class="btn text-success" onclick="toggleComment('iframe<?=$i?>')"><i class="fa fa fa-comment"></i></button>
+						<a href="https://www.facebook.com/sharer/sharer.php?u=localhost:8000/page/dashboard.php?page=home&id=<?=$row['s_id']?>" class="btn text-warning"><i class="fa fa-share-alt"></i></a>
 						&nbsp;<small><?=$Countlike?> like</small>
 					</div>
-					<iframe id="iframe<?=$i?>" class="iframe" src="comment.php?id=<?=$row['sender_id']?>" frameborder="0" style="height:0"></iframe>
+					<iframe id="iframe<?=$i?>" class="iframe" src="comment.php?id=<?=$row['s_id']?>" frameborder="0" style="height:0"></iframe>
 
 				</div>
 				<?php
@@ -136,9 +148,19 @@ if(isset($access)) {
 
 	</div>
 	<div class="col-md-4">
-		b
+		
 	</div>
 </div>
+<script>
+	function toggleComment(el = ''){
+		var x = document.getElementById(el)
+		if(x.style.height!='320px'){
+			x.style.height='320px';
+		}else{
+			x.style.height='0px';
+		}
+	}
+</script>
 <?php
 }
 ?>

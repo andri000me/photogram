@@ -5,7 +5,9 @@ require '../connect.php';
 
 if(isset($_COOKIE["user"])||isset($_SESSION['user']))
 {
-	$user = $_SESSION['user'] | $_COOKIE["user"];
+	$user = isset($_SESSION['user']) ? $_SESSION['user'] : false;
+
+	$user = isset($_COOKIE["user"]) ? $_COOKIE["user"] : false;
 	$user=base64_decode($user);
 
 	$query = $connect->query("SELECT * FROM users WHERE id = '$user'");
@@ -23,10 +25,12 @@ if(isset($_COOKIE["user"])||isset($_SESSION['user']))
 		font-size: 14px;
 	}
 	.comment p{
+		white-space: pre-wrap;
 		padding:0;
 		margin:0;
 		color: #565656;
 		line-height: 24px;
+		word-wrap: break-word;
 	}
 	.comment a{
 		/*color: blue;*/
@@ -51,11 +55,14 @@ if(isset($_COOKIE["user"])||isset($_SESSION['user']))
 </style>
 <?php
 if (isset($_GET['id'])) {
-	$id = $_GET['id'];
+	$id = filter($_GET['id']);
 	if(isset($_POST['comment'])){
 		$comment = filter($_POST['comment']);
+		$comment = str_replace(['<','>'], ['&lt','&gt'], $comment);
 		$x = explode(' ', $comment);
-		$teks = '';
+		$user_id = $result['id'];
+		$user_name = $result['user'];
+		$teks = '<b>'.$user_name.'&nbsp;Tagged You!</b>&nbsp;';
 		$tag = [];
 		foreach ($x as $key => $value) {
 			if(strpos($value,'@') > -1){
@@ -64,7 +71,6 @@ if (isset($_GET['id'])) {
 				$teks .= ' '.$value;
 			}
 		}
-		$user_id = $result['id'];
 		foreach ($tag as $key => $value) {
 			$url = 'dashboard.php?page=status&id='.$id;
 			$qu = "INSERT INTO notification(user_name,caption,link) VALUES('$value','$teks','$url')";
@@ -75,8 +81,7 @@ if (isset($_GET['id'])) {
 
 		$q = "INSERT INTO comment(status_id, user_id, comment) VALUES('$id','$user_id','$comment')";
 		$connect->query($q);
-	// echo $teks;
-	// print_r($tag);
+	echo $teks;
 	}
 }
 ?>
@@ -92,7 +97,7 @@ if (isset($_GET['id'])) {
 		?><p><a href="#" class="me"><?=$r['user']?></a><?=$r['caption']?></p>
 		<br>
 		<?php 
-		$q = $connect->query("SELECT u.user,c.comment FROM comment c LEFT JOIN users u ON u.id=c.user_id WHERE status_id = '$id'");
+		$q = $connect->query("SELECT u.user,c.comment FROM comment c LEFT JOIN users u ON u.id=c.user_id WHERE c.status_id = '$id' ORDER BY c.id DESC");
 		while($row = $q->fetch_assoc()){
 			$cl = '';
 			if($result['user'] != $row['user']){

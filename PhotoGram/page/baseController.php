@@ -36,7 +36,7 @@ if ($uploadOk == 0) {
 	$msg =  "Sorry, your file was not uploaded.";
 // if everything is ok, try to upload file
 } else {
-	$target = $target_dir . generateToken(32).'.'.$imageFileType;
+	$target = $target_dir . generateToken(128).'.'.$imageFileType;
 	if (move_uploaded_file($_FILES[$name]["tmp_name"], $target)) {
 		$msg =  $target_file;
 	} else {

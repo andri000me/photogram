@@ -2,6 +2,7 @@
 session_start();
 date_default_timezone_set('Asia/jakarta');
 
+require 'page/baseController.php';
 require 'connect.php';
 
 if(isset($_COOKIE["user"])||isset($_SESSION['user'])){
@@ -25,12 +26,12 @@ if(isset($_POST['name'])) {
 			$_SESSION['user'] = $cookie;
 			setcookie("user", $cookie, time()+30*24*60*60);
 		}else{
-			echo 'Gagal Login';
+			alert('Gagal Login');
 		}
 
 
 	}else{
-		echo 'Data jangan kosong';
+		alert('Data jangan kosong');
 	}
 }
 ?>
@@ -39,7 +40,8 @@ if(isset($_POST['name'])) {
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Login</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 	<style>

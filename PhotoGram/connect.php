@@ -16,8 +16,7 @@ function filter($data, $con='') {
 	}
 
 	if($con != ''){
-		// boleh di aktifin
-		// $data = mysql_real_escape_string($data);
+		$data = mysqli_real_escape_string($con,$data);
 	}
 
 	return $data;

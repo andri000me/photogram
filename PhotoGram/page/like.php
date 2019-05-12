@@ -6,7 +6,7 @@ if(isset($_GET['id'])&&isset($_GET['user'])){
 	$user = filter($_GET['user']);
 
 	if(isset($_GET['dislike'])){
-		$id = $_GET['dislike'];
+		$id = filter($_GET['dislike']);
 		$connect->query("DELETE FROM likes WHERE likes = '$id'");
 		redirect('dashboard.php');
 	}else{
